@@ -3,7 +3,7 @@ using UnityEngine;
 public class MazeConstructor : MonoBehaviour
 {
     public bool showDebug;
-    
+    public Node[,] graph;
     [SerializeField] private Material mazeMat1;
     [SerializeField] private Material mazeMat2;
     [SerializeField] private Material startMat;
@@ -42,8 +42,16 @@ public class MazeConstructor : MonoBehaviour
         data = FromDimensions(sizeRows, sizeCols);
         goalRow = data.GetUpperBound(0) - 1;
         goalCol = data.GetUpperBound(1) - 1;
+        graph = new Node[sizeRows,sizeCols];
+
+for (int i = 0; i < sizeRows; i++)        
+    for (int j = 0; j < sizeCols; j++)            
+        graph[i, j] = data[i,j] == 0 ? new Node(i, j, true) : new Node(i, j, false);
+     
         DisplayMaze();
+   
     }
+
     public void DisposeOldMaze()
 {
     GameObject[] objects = GameObject.FindGameObjectsWithTag("Generated");

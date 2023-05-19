@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 328724921}
   - component: {fileID: 328724920}
   - component: {fileID: 328724919}
+  - component: {fileID: 328724922}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Generated
@@ -287,6 +288,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &328724922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328724918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e702f973809a24fa58272c32dc0734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterSpeed: 3
 --- !u!1 &529368642
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,9 +312,10 @@ GameObject:
   - component: {fileID: 529368645}
   - component: {fileID: 529368644}
   - component: {fileID: 529368643}
+  - component: {fileID: 529368646}
   m_Layer: 0
   m_Name: Controller
-  m_TagString: Untagged
+  m_TagString: Generated
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -314,9 +329,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 529368642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b490c939827ee2498ac146d559be015, type: 3}
+  m_Script: {fileID: 11500000, guid: f57307dc8074a7342b6057d80f258f42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rows: 11
+  cols: 11
+  playerPrefab: {fileID: 526753307576256837, guid: 5cf7f6f0502cc7c4e8314e039ce9303e, type: 3}
+  monsterPrefab: {fileID: 895211356916686346, guid: 00cf8312173b3704aabaf0aa06651685, type: 3}
 --- !u!114 &529368644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,9 +345,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 529368642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7d9554ccdb473c48bb36b57199ec7c8, type: 3}
+  m_Script: {fileID: 11500000, guid: b507bb07a1a49ce48ae1c464c6a2db31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebug: 0
+  mazeMat1: {fileID: 2100000, guid: ee1783965edfa174f8339d26768f43c2, type: 2}
+  mazeMat2: {fileID: 2100000, guid: 545a9273b54400a4799bbd2fa83df569, type: 2}
+  startMat: {fileID: 0}
+  treasureMat: {fileID: 2100000, guid: ad3f0fbfa96bd414c8f698354958e49d, type: 2}
+  placementThreshold: 0.1
 --- !u!4 &529368645
 Transform:
   m_ObjectHideFlags: 0
@@ -343,6 +368,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &529368646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529368642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e702f973809a24fa58272c32dc0734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterSpeed: 3
 --- !u!1 &974588508
 GameObject:
   m_ObjectHideFlags: 0
