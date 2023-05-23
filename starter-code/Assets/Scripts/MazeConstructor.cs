@@ -29,8 +29,27 @@ public class MazeConstructor : MonoBehaviour
     };
     hallWidth = meshGenerator.width;
 }
+    void OnGUI()
+    {
+        if (!showDebug)
+            return;
 
- 
+        int[,] maze = data;
+        int rMax = maze.GetUpperBound(0);
+        int cMax = maze.GetUpperBound(1);
+
+        string msg = "";
+
+        for (int i = rMax; i >= 0; i--)
+        {
+            for (int j = 0; j <= cMax; j++)
+                msg += maze[i, j] == 0 ? "...." : "==";
+            msg += "\n";
+        }
+
+        GUI.Label(new Rect(20, 20, 500, 500), msg);
+    }
+
     public void GenerateNewMaze(int sizeRows, int sizeCols)
     {
          DisposeOldMaze(); 
@@ -44,9 +63,9 @@ public class MazeConstructor : MonoBehaviour
         goalCol = data.GetUpperBound(1) - 1;
         graph = new Node[sizeRows,sizeCols];
 
-for (int i = 0; i < sizeRows; i++)        
-    for (int j = 0; j < sizeCols; j++)            
-        graph[i, j] = data[i,j] == 0 ? new Node(i, j, true) : new Node(i, j, false);
+        for (int i = 0; i < sizeRows; i++)        
+            for (int j = 0; j < sizeCols; j++)            
+            graph[i, j] = data[i,j] == 0 ? new Node(i, j, true) : new Node(i, j, false);
      
         DisplayMaze();
    
@@ -73,7 +92,7 @@ private void DisplayMaze()
     mc.sharedMesh = mf.mesh;
 
     MeshRenderer mr = go.AddComponent<MeshRenderer>();
-    mr.materials = new Material[2];
+    mr.materials = new Material[2]{mazeMat1,mazeMat2 };
 
     if (mazeMat1 != null)
         mr.materials[0] = mazeMat1;
@@ -111,25 +130,18 @@ public int[,] FromDimensions(int sizeRows, int sizeCols)
     return maze;
 }
 
-void OnGUI()
-{
-    if (!showDebug)
-        return;
-
-    int[,] maze = data;
-    int rMax = maze.GetUpperBound(0);
-    int cMax = maze.GetUpperBound(1);
-
-    string msg = "";
-
-    for (int i = rMax; i >= 0; i--)
+    private void PlaceGoal(TriggerEventHandler treasureCallback)
     {
-        for (int j = 0; j <= cMax; j++)
-            msg += maze[i, j] == 0 ? "...." : "==";
-        msg += "\n";
-    }
+        GameObject treasure = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        treasure.transform.position = new Vector3(goalCol * hallWidth, .5f, goalRow * hallWidth);
+        treasure.name = "Treasure";
+        treasure.tag = "Generated";
 
-    GUI.Label(new Rect(20, 20, 500, 500), msg);
-}
+        treasure.GetComponent<BoxCollider>().isTrigger = true;
+        treasure.GetComponent<MeshRenderer>().sharedMaterial = treasureMat;
+
+        TriggerEventRouter tc = treasure.AddComponent<TriggerEventRouter>();
+        tc.callback = treasureCallback;
+    }
 
 }

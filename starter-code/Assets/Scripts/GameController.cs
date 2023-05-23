@@ -10,14 +10,15 @@ public class GameController : MonoBehaviour
     public GameObject monsterPrefab;
     private AIController aIController;
 
+
     void Awake()
     {
         constructor = GetComponent<MazeConstructor>();
         aIController = GetComponent<AIController>();
     }
-
     void Start()
     {
+
         constructor.GenerateNewMaze(rows, cols);
         aIController.Graph = constructor.graph;
         aIController.Player = CreatePlayer();
@@ -25,6 +26,12 @@ public class GameController : MonoBehaviour
         aIController.HallWidth = constructor.hallWidth;
         aIController.StartAI();
     }
+
+    private void Update()
+    {
+        Debug.Log("Wake");
+    }
+ 
 
     private GameObject CreatePlayer()
     {
