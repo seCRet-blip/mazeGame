@@ -50,7 +50,7 @@ public class MazeConstructor : MonoBehaviour
         GUI.Label(new Rect(20, 20, 500, 500), msg);
     }
 
-    public void GenerateNewMaze(int sizeRows, int sizeCols)
+    public void GenerateNewMaze(int sizeRows, int sizeCols, TriggerEventHandler treasureCallback)
     {
          DisposeOldMaze(); 
         if (sizeRows % 2 == 0 && sizeCols % 2 == 0)
@@ -68,7 +68,7 @@ public class MazeConstructor : MonoBehaviour
             graph[i, j] = data[i,j] == 0 ? new Node(i, j, true) : new Node(i, j, false);
      
         DisplayMaze();
-   
+        PlaceGoal(treasureCallback); 
     }
 
     public void DisposeOldMaze()

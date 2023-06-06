@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
 
-        constructor.GenerateNewMaze(rows, cols);
+        constructor.GenerateNewMaze(rows, cols, OnTreasureTrigger);
         aIController.Graph = constructor.graph;
         aIController.Player = CreatePlayer();
         aIController.Monster = CreateMonster();
@@ -27,27 +27,60 @@ public class GameController : MonoBehaviour
         aIController.StartAI();
     }
 
-    private void Update()
-    {
-        Debug.Log("Wake");
+
+  private void OnMonsterTrigger(GameObject trigger, GameObject other)
+    { 
+        if(other.gameObject.tag == "Player") 
+        {
+            Debug.Log("Gotcha!");
+            aIController.StopAI();
+            constructor.GenerateNewMaze(rows, cols, OnTreasureTrigger);
+            aIController.Graph = constructor.graph;
+            aIController.Player = CreatePlayer();
+            aIController.Monster = CreateMonster();
+            aIController.HallWidth = constructor.hallWidth;
+            aIController.StartAI();
+        }
     }
+
+
  
-
-    private GameObject CreatePlayer()
+private GameObject CreatePlayer()
+{
+    // Find existing player and destroy it
+    GameObject existingPlayer = GameObject.FindGameObjectWithTag("Player");
+    if (existingPlayer != null)
     {
-        Vector3 playerStartPosition = new Vector3(constructor.hallWidth, 1, constructor.hallWidth);
-        GameObject player = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
-        player.tag = "Generated";
-
-        return player;
+        Destroy(existingPlayer);
     }
+
+    Vector3 playerStartPosition = new Vector3(constructor.hallWidth, 1, constructor.hallWidth);
+    GameObject player = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
+    player.tag = "Player";
+
+    return player;
+}
+
 
     private GameObject CreateMonster()
     {
         Vector3 monsterPosition = new Vector3(constructor.goalCol * constructor.hallWidth, 0f, constructor.goalRow * constructor.hallWidth);
         GameObject monster = Instantiate(monsterPrefab, monsterPosition, Quaternion.identity);
-        monster.tag = "Generated";
+        monster.tag = "Monster";
+        
+        // Step 2
+        TriggerEventRouter triggerEventRouter = monster.AddComponent<TriggerEventRouter>();
+        triggerEventRouter.callback += OnMonsterTrigger;
 
         return monster;
     }
+    private void OnTreasureTrigger(GameObject trigger, GameObject other)
+{ 
+    Debug.Log("You Won!");
+    aIController.StopAI();
 }
+
+
+
+}
+
