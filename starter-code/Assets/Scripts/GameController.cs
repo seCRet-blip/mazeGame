@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(MazeConstructor))]
 public class GameController : MonoBehaviour
@@ -26,6 +27,54 @@ public class GameController : MonoBehaviour
         aIController.HallWidth = constructor.hallWidth;
         aIController.StartAI();
     }
+void Update()
+{
+    if (Input.GetKeyDown(KeyCode.F))
+    {
+        // Clear previous path spheres
+        ClearPath();
+
+        // Get player's position in the grid
+        Vector3 playerPos = aIController.Player.transform.position;
+        int playerPosX = Mathf.RoundToInt(playerPos.x / constructor.hallWidth);
+        int playerPosZ = Mathf.RoundToInt(playerPos.z / constructor.hallWidth);
+
+        // Get goal's position in the grid
+        Vector3 goalPos = new Vector3(constructor.goalCol * constructor.hallWidth, 0f, constructor.goalRow * constructor.hallWidth);
+        int goalPosX = Mathf.RoundToInt(goalPos.x / constructor.hallWidth);
+        int goalPosZ = Mathf.RoundToInt(goalPos.z / constructor.hallWidth);
+
+        // Use AIController to find path
+        List<Node> path = aIController.FindPath(playerPosX, playerPosZ, goalPosX, goalPosZ);
+
+   // Generate spheres along the path
+foreach (Node node in path)
+{
+    Vector3 potentialSpherePos = new Vector3(node.x * constructor.hallWidth, 1, node.y * constructor.hallWidth);
+    // Check if this node's position matches the treasure's position
+    if (potentialSpherePos != constructor.Treasure.transform.position)
+    {
+        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.position = potentialSpherePos;
+        sphere.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f); // Adjust the size of the sphere if required
+        sphere.tag = "PathSphere";
+        // Destroy the SphereCollider component to disable collision
+        Destroy(sphere.GetComponent<SphereCollider>());
+    }
+}
+
+    }
+}
+
+// Clears all spheres from the previous path
+void ClearPath()
+{
+    GameObject[] pathSpheres = GameObject.FindGameObjectsWithTag("PathSphere");
+    foreach (GameObject sphere in pathSpheres)
+    {
+        Destroy(sphere);
+    }
+}
 
 
   private void OnMonsterTrigger(GameObject trigger, GameObject other)

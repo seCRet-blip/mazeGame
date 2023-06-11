@@ -13,6 +13,7 @@ public class MazeConstructor : MonoBehaviour
     public int goalRow{ get; private set; }
     public int goalCol{ get; private set; }
 
+public GameObject Treasure { get; private set; }
 
     private MazeMeshGenerator meshGenerator;
     public int[,] data{get; private set;}
@@ -130,18 +131,19 @@ public int[,] FromDimensions(int sizeRows, int sizeCols)
     return maze;
 }
 
-    private void PlaceGoal(TriggerEventHandler treasureCallback)
-    {
-        GameObject treasure = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        treasure.transform.position = new Vector3(goalCol * hallWidth, .5f, goalRow * hallWidth);
-        treasure.name = "Treasure";
-        treasure.tag = "Generated";
+private void PlaceGoal(TriggerEventHandler treasureCallback)
+{
+    Treasure = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    Treasure.transform.position = new Vector3(goalCol * hallWidth, .5f, goalRow * hallWidth);
+    Treasure.name = "Treasure";
+    Treasure.tag = "Generated";
 
-        treasure.GetComponent<BoxCollider>().isTrigger = true;
-        treasure.GetComponent<MeshRenderer>().sharedMaterial = treasureMat;
+    Treasure.GetComponent<BoxCollider>().isTrigger = true;
+    Treasure.GetComponent<MeshRenderer>().sharedMaterial = treasureMat;
 
-        TriggerEventRouter tc = treasure.AddComponent<TriggerEventRouter>();
-        tc.callback = treasureCallback;
-    }
+    TriggerEventRouter tc = Treasure.AddComponent<TriggerEventRouter>();
+    tc.callback = treasureCallback;
+}
+
 
 }
