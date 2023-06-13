@@ -50,7 +50,7 @@ void Update()
    // Generate spheres along the path
 foreach (Node node in path)
 {
-    Vector3 potentialSpherePos = new Vector3(node.x * constructor.hallWidth, 1, node.y * constructor.hallWidth);
+    Vector3 potentialSpherePos = new Vector3(node.y * constructor.hallWidth, 1, node.x * constructor.hallWidth);
     // Check if this node's position matches the treasure's position
     if (potentialSpherePos != constructor.Treasure.transform.position)
     {
