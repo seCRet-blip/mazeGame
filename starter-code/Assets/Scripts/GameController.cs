@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject monsterPrefab;
     private AIController aIController;
+    private bool toggle = true;
 
 
     void Awake()
@@ -29,10 +30,10 @@ public class GameController : MonoBehaviour
     }
 void Update()
 {
+    
     if (Input.GetKeyDown(KeyCode.F))
     {
-        // Clear previous path spheres
-        ClearPath();
+        if(toggle){
 
         // Get player's position in the grid
         Vector3 playerPos = aIController.Player.transform.position;
@@ -45,30 +46,38 @@ void Update()
         int goalPosZ = Mathf.RoundToInt(goalPos.z / constructor.hallWidth);
 
         // Use AIController to find path
-        List<Node> path = aIController.FindPath(playerPosX, playerPosZ, goalPosX, goalPosZ);
+        List<Node> path = aIController.FindPath(playerPosZ, playerPosX, goalPosX, goalPosZ);
 
    // Generate spheres along the path
-foreach (Node node in path)
-{
-    Vector3 potentialSpherePos = new Vector3(node.y * constructor.hallWidth, 1, node.x * constructor.hallWidth);
-    // Check if this node's position matches the treasure's position
-    if (potentialSpherePos != constructor.Treasure.transform.position)
+    foreach (Node node in path)
     {
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.position = potentialSpherePos;
-        sphere.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f); // Adjust the size of the sphere if required
-        sphere.tag = "PathSphere";
+        Vector3 potentialSpherePos = new Vector3(node.y * constructor.hallWidth, 1, node.x * constructor.hallWidth);
+    // Check if this node's position matches the treasure's position
+        if (potentialSpherePos != constructor.Treasure.transform.position)
+        {
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.position = potentialSpherePos;
+            sphere.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f); // Adjust the size of the sphere if required
+            sphere.tag = "PathSphere";
         // Destroy the SphereCollider component to disable collision
-        Destroy(sphere.GetComponent<SphereCollider>());
-    }
-}
-
+            Destroy(sphere.GetComponent<SphereCollider>());
+        }
+    }       
+        toggle = false;
+        }
+        
+        else{
+            ClearPath();
+            toggle = true;
+        }
+        // Clear previous path spheres
     }
 }
 
 // Clears all spheres from the previous path
 void ClearPath()
 {
+    Debug.Log("Clearing path spheres."); // Add this line for debugging
     GameObject[] pathSpheres = GameObject.FindGameObjectsWithTag("PathSphere");
     foreach (GameObject sphere in pathSpheres)
     {
@@ -77,6 +86,8 @@ void ClearPath()
 }
 
 
+// when the monster collides with the player a new maze is created
+// if the path is still active it will clear the path and set the toggle to true//
   private void OnMonsterTrigger(GameObject trigger, GameObject other)
     { 
         if(other.gameObject.tag == "Player") 
@@ -89,6 +100,9 @@ void ClearPath()
             aIController.Monster = CreateMonster();
             aIController.HallWidth = constructor.hallWidth;
             aIController.StartAI();
+          
+            ClearPath();
+              toggle = true;
         }
     }
 
@@ -128,8 +142,6 @@ private GameObject CreatePlayer()
     Debug.Log("You Won!");
     aIController.StopAI();
 }
-
-
 
 }
 
